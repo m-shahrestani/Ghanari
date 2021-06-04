@@ -51,7 +51,7 @@ user_name varchar(20) not null
 create table likes (
 user_name varchar(20) not null
 ,ava_id int not null
-,PRIMARY KEY (user_name, ava_id)
+,primary key (user_name, ava_id)
 ,foreign key(user_name) references user(user_name)
 ,foreign key(ava_id) references ava(ava_id)
 );
