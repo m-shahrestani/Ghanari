@@ -28,4 +28,10 @@ where 'rak' not in (select blocked
 					from blocks
 					where blocker = (select sender from ava where ava_id = 2));
                     
+insert into likes(user_name, ava_id)
+select 'gak', 3
+where 'gak' not in (select blocked 
+					from blocks
+					where blocker = (select sender from ava where ava_id = 3));
+                    
 select * from likes;
