@@ -53,9 +53,9 @@ class DB:
             print(result.fetchall())
         cursor.close()
 
-    def call_proc(self):
+    def call_proc(self, code, args):
         cursor = self._db.cursor(buffered=True)
-        cursor.callproc('make_tables')
+        cursor.callproc(self.proc_number[code], args)
         for result in cursor.stored_results():
             print(result.fetchall())
         cursor.close()
@@ -76,6 +76,7 @@ def print_help():
 if __name__ == '__main__':
     Ghanari = DB()
     print_help()
+    Ghanari.call_proc(2, ["a", "b"])
     while True:
         command = input('> ').split(' ')
         if len(command) == 1:
