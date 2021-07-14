@@ -99,7 +99,23 @@ def print_help():
         'show_user_avas \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t - to show self avas\n'
         'show_senders \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t - to show list of message senders\n'
         'show_logins \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t - to show time of logins\n'
-        'sign_out \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t - to sign out\n')
+        'sign_out \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t - to sign out')
+
+
+def check_login(db, com):
+    cursor = db._db.cursor(buffered=True)
+    cursor.callproc(db.proc_number[2], com)
+    db._db.commit()
+    hold = []
+    for result in cursor.stored_results():
+        hold.append(result.fetchall())
+    cursor.close()
+    if hold[0][0][0] == 1:
+        print("login is successful.")
+        return True
+    else:
+        print("Username or Password is wrong.")
+        return False
 
 
 def login(db):
@@ -175,12 +191,14 @@ if __name__ == '__main__':
                 command = input('Please enter user_name/password\n'
                                 'for example: ali98/123456\n').split('/')
                 if len(command) == 2:
-                    Ghanari.call_proc(2, command)
-                    sign_flag = login(Ghanari)
-                    if sign_flag:
-                        print("Signed out.")
-                        break
-                elif not sign_flag:
+                    if check_login(Ghanari, command):
+                        sign_flag = login(Ghanari)
+                        if sign_flag:
+                            print("Signed out.")
+                            break
+                    else:
+                        sign_flag = False
+                if not sign_flag:
                     break
                 else:
                     print("Wrong input.")
